@@ -1,4 +1,4 @@
-creatanaLibrary = true;
+ctnaLibrary = true;
 function getParentByClassName(e, IDstring){
     var IDregex = new RegExp('(\\s|^)'+IDstring+'(\\s|$)');
     e=e.parentNode;
@@ -109,4 +109,26 @@ function removeStyle(element, styleName){
     var styleRegex = new RegExp("(^|;|;\\s*)"+styleName+":.*?(;|$)");
     var newStyles=currentStyle.replace(styleRegex, ';');   
     element.setAttribute('style', newStyles);
+}
+
+
+function doCssAt(querie, element, rules, selector){
+	var headTag = document.getElementsByTagName('head')[0];
+	if(typeof(selector)=='undefined'){
+		selectorSlug = element.getAttribute('id');
+		selector = '#'+selectorSlug;
+	}else{
+		selectorSlug = selector.slice(1);
+	}
+	console.log(selectorSlug, rules);
+	if(selectorSlug != null){
+		if(document.getElementById(selectorSlug+'-style') != null){
+			headTag.removeChild(document.getElementById(selectorSlug+'-style'));
+		}
+		
+		var newStyle = document.createElement('style');
+		newStyle.setAttribute('id', selectorSlug+'-style');
+		newStyle.innerHTML = "@media (" + querie + "){"+selector+"{"+rules+";}}";
+		document.getElementsByTagName('head')[0].appendChild(newStyle);
+	}
 }
